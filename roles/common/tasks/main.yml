@@ -8,7 +8,6 @@
     - asdf-vm
     - gnome-terminal-transparency
     - aws-cli-v2-bin
-    - yay-bin
     - neovim
     - docker
     - docker-compose

@@ -1,13 +1,24 @@
 #!/bin/bash
 source ./shell/functions.sh
 
+BASE_DIR=`pwd`
+
 echo
 header "START: Pre-installation process"
 echo
 
+# yay-bin ####################################################################################
+notice "* Install yay-bin"
+git clone https://aur.archlinux.org/yay-bin.git /tmp/yay-bin
+cd /tmp/yay-bin
+makepkg -si --noconfirm
+cd ..
+rm -rf yay-bin
+cd ${BASE_DIR}
+
 # install ansible ############################################################################
 notice "* Install ansible"
-sudo pacman -S ansible --noconfirm
+yay -S ansible --noconfirm
 
 
 # Ansible galaxy #############################################################################
