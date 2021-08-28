@@ -80,6 +80,8 @@
   become: true
   cron:
     name: Clear memory cache
+    minute: 0
+    hour: 3
     job: "sh /opt/scripts/clear_memory_cache.sh"
     state: present
 
