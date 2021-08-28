@@ -1,0 +1,7 @@
+---
+- hosts: localhost
+  gather_facts: false
+  tasks:
+  - debug: { var: ansible_connection }
+  - debug: { var: ansible_playbook_python }
+  - debug: { var: ansible_python_interpreter }
