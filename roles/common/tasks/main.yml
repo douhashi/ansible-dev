@@ -12,12 +12,13 @@
     - neovim
     - docker
     - docker-compose
+    - github-cli
 
 - name: enable docker service
   service:
     name: docker
     enabled: true
-    notify:
-      - Restart docker
+  notify:
+    - Restart docker
   become: true
 
