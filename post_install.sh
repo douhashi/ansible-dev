@@ -40,6 +40,12 @@ pip install -r pip/requirements.txt
 notice "add ${USER} to docker group"
 sudo usermod -a -G docker ${USER}
 
+# create swapfile
+notice "create swapfile"
+sudo fallocate -l 16G /swapfile
+sudo chmod 600 /swapfile
+sudo swapon /swapfile
+
 
 echo
 notice "Finished."

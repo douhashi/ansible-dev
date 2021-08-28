@@ -13,6 +13,7 @@
     - docker
     - docker-compose
     - github-cli
+    - celluloid
 
 - name: enable docker service
   service:
@@ -21,4 +22,64 @@
   notify:
     - Restart docker
   become: true
+
+- name: Create /swapfile
+  command: fallocate -l 16G /swapfile
+  args:
+    creates: /swapfile
+  become: true
+
+- name: Change permission /swapfile
+  file:
+    path: /swapfile
+    mode: '0600'
+  become: true
+
+- name: test /swapfile
+  command: file /swapfile
+  register: swap_file_test
+  become: true
+
+- name: make /swapfile
+  command: mkswap /swapfile
+  when: swap_file_test.stdout.find('swap file') == -1
+  become: true
+
+- name: check swap
+  command: /sbin/swapon -s
+  register: check_swap
+
+- name: swapon /swapfile
+  command: swapon /swapfile
+  when: check_swap.stdout == ''
+  become: true
+
+- name: mount swap
+  mount:
+    name: swap
+    src: /swapfile
+    fstype: swap
+    opts: defaults
+    passno: '0'
+    dump: '0'
+    state: present
+  become: true
+
+- name: Ensures /opt/scripts dir exists
+  file: path=/opt/scripts state=directory
+  become: true
+
+- name: deploy clear_memory_cache.sh
+  become: true
+  template:
+    src: templates/clear_memory_cache.sh.j2
+    dest: /opt/scripts/clear_memory_cache.sh
+    mode: '0755'
+
+- name: Add cron to clear memory cache
+  become: true
+  cron:
+    name: Clear memory cache
+    job: "sh /opt/scripts/clear_memory_cache.sh"
+    state: present
 
