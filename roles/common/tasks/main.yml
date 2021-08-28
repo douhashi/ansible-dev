@@ -1,2 +1,23 @@
 ---
-# tasks file for common
+- name: Install common package
+  aur: name={{ item }} state=present
+  with_items:
+    - base-devel
+    - google-chrome
+    - tmux
+    - asdf-vm
+    - gnome-terminal-transparency
+    - aws-cli-v2-bin
+    - yay-bin
+    - neovim
+    - docker
+    - docker-compose
+
+- name: enable docker service
+  service:
+    name: docker
+    enabled: true
+    notify:
+      - Restart docker
+  become: true
+
